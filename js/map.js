@@ -1,12 +1,37 @@
 'use strict';
 
-var offerTitles = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
-var offerTypes = ['flat', 'house', 'bungalo'];
-var offerTimes = ['12:00', '13:00', '14:00'];
-var features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+var OFFER_TITLES = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
+var OFFER_TYPES = ['flat', 'house', 'bungalo'];
+var OFFER_TIMES = ['12:00', '13:00', '14:00'];
+var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+var KEY_CODES = {
+  enter: 13,
+  esc: 27
+};
+
+var tokyoPinMap = document.querySelector('.tokyo__pin-map');
+var pin = tokyoPinMap.querySelector('.pin');
+var offerDialog = document.querySelector('.dialog');
+var dialogTitle = offerDialog.querySelector('.dialog__title');
+var dialogTitleImg = dialogTitle.querySelector('img');
+var dialogPanel = offerDialog.querySelector('.dialog__panel');
+var lodgeTemplate = document.querySelector('#lodge-template').content;
+var pins = [];
+var offerDialogClose = offerDialog.querySelector('.dialog__close');
+var offerObjects;
+var pinIndex;
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+function shuffleArr(arr) {
+  for (var i = 0; i < arr.length; i++) {
+    var arrItem = arr[i];
+    var j = getRandomInt(0, arr.length - 1);
+    arr[i] = arr[j];
+    arr[j] = arrItem;
+  }
 }
 
 function getObjectFeatures(featuresList) {
@@ -21,26 +46,27 @@ function getObjectFeatures(featuresList) {
 
 function getObject() {
   var objects = [];
+  shuffleArr(OFFER_TITLES);
   for (var i = 0; i < 8; i++) {
     var locationX = getRandomInt(300, 900);
     var locationY = getRandomInt(175, 500);
     var roomNumber = getRandomInt(1, 5);
     var offerFeatures = [];
-    offerFeatures = getObjectFeatures(features);
+    offerFeatures = getObjectFeatures(FEATURES);
     objects[i] = {
       author: {
         avatar: 'img/avatars/user0' + (i + 1) + '.png'
       },
 
       offer: {
-        title: offerTitles[getRandomInt(0, offerTitles.length - 1)],
+        title: OFFER_TITLES[getRandomInt(0, OFFER_TITLES.length - 1)],
         address: locationX + ',' + ' ' + locationY,
         price: getRandomInt(1000, 1000000),
-        type: offerTypes[getRandomInt(0, 2)],
+        type: OFFER_TYPES[getRandomInt(0, 2)],
         rooms: roomNumber,
         guests: roomNumber * 2,
-        checkin: offerTimes[getRandomInt(0, 2)],
-        checkout: offerTimes[getRandomInt(0, 2)],
+        checkin: OFFER_TIMES[getRandomInt(0, 2)],
+        checkout: OFFER_TIMES[getRandomInt(0, 2)],
         features: offerFeatures,
         description: '',
         photos: []
@@ -54,9 +80,6 @@ function getObject() {
   }
   return objects;
 }
-
-var tokyoPinMap = document.querySelector('.tokyo__pin-map');
-var pin = tokyoPinMap.querySelector('.pin');
 
 function renderPins(offerList) {
   var pinElement = pin.cloneNode(true);
@@ -78,12 +101,6 @@ function initPins(offerList) {
   tokyoPinMap.appendChild(fragment);
 }
 
-var offerDialog = document.querySelector('.dialog');
-var dialogTitle = offerDialog.querySelector('.dialog__title');
-var dialogTitleImg = dialogTitle.querySelector('img');
-var dialogPanel = offerDialog.querySelector('.dialog__panel');
-var lodgeTemplate = document.querySelector('#lodge-template').content;
-
 function getOffer(object) {
   var offerElement = lodgeTemplate.cloneNode(true);
   offerElement.querySelector('.lodge__title').textContent = object.offer.title;
@@ -103,10 +120,81 @@ function getOffer(object) {
   return offerElement;
 }
 
+function getPins() {
+  var pinsNL = tokyoPinMap.querySelectorAll('.pin');
+  return pinsNL;
+}
+
+function setPinsHandler() {
+  for (var i = 1; i < pins.length; i++) {
+    pins[i].tabIndex = 1;
+    pins[i].addEventListener('click', function (evt) {
+      var thisPin = evt.target.classList.contains('pin') ? evt.target : evt.target.parentNode;
+      for (var j = 0; j < pins.length; j++) {
+        if (pins[j] === thisPin) {
+          pinIndex = j;
+          break;
+        }
+      }
+      openOfferDialog(pinIndex);
+    });
+    pins[i].addEventListener('keydown', function (evt) {
+      var thisPin = evt.target.classList.contains('pin') ? evt.target : evt.target.parentNode;
+      if (evt.keyCode === KEY_CODES.enter) {
+        for (var j = 0; j < pins.length; j++) {
+          if (pins[j] === thisPin) {
+            pinIndex = j;
+            break;
+          }
+        }
+        openOfferDialog(pinIndex);
+      }
+    });
+  }
+}
+
+function setOfferDialogHandler() {
+  offerDialogClose.tabIndex = 1;
+  offerDialogClose.addEventListener('click', closeOfferDialog);
+  offerDialogClose.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === KEY_CODES.enter) {
+      closeOfferDialog();
+    }
+  });
+}
+
+function openOfferDialog(index) {
+  offerDialog.classList.remove('hidden');
+  for (var i = 1; i < pins.length; i++) {
+    if (pins[i].classList.contains('pin--active')) {
+      pins[i].classList.remove('pin--active');
+    }
+  }
+  pins[index].classList.add('pin--active');
+  offerDialog.replaceChild(getOffer(offerObjects[index - 1]), dialogPanel);
+  dialogPanel = offerDialog.querySelector('.dialog__panel');
+  document.addEventListener('keydown', onOfferDialogEscPress);
+}
+
+function closeOfferDialog() {
+  offerDialog.classList.add('hidden');
+  pins[pinIndex].classList.remove('pin--active');
+  document.removeEventListener('keydown', onOfferDialogEscPress);
+}
+
+function onOfferDialogEscPress(evt) {
+  if (evt.keyCode === KEY_CODES.esc) {
+    closeOfferDialog();
+  }
+}
+
 function init() {
-  var offerObjects = getObject();
+  offerObjects = getObject();
   initPins(offerObjects);
-  offerDialog.replaceChild(getOffer(offerObjects[0]), dialogPanel);
+  offerDialog.classList.add('hidden');
+  pins = getPins();
+  setPinsHandler();
+  setOfferDialogHandler();
 }
 
 init();
