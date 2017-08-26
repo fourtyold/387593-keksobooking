@@ -197,4 +197,69 @@ function init() {
   setOfferDialogHandler();
 }
 
+// //////////////////////////////////////////////////////ВАЛИДАЦИЯ ФОРМЫ
+function initForm() {
+  noticeAddress.required = true;
+
+  noticeTitle.required = true;
+  noticeTitle.minLength = 30;
+  noticeTitle.maxLength = 100;
+
+  noticePrice.required = true;
+  noticePrice.value = 1000;
+
+  noticeCapacity.value = '1';
+
+  noticeTimeIn.onchange = function () {
+    setNoticeTime();
+  };
+
+  noticeType.onchange = function () {
+    setNoticePrice();
+  };
+
+  noticeRoomNumber.onchange = function () {
+    setNoticeCapacity();
+  };
+}
+
+function setNoticeTime() {
+  noticeTimeOut.value = noticeTimeIn.value;
+}
+
+function setNoticePrice() {
+  switch (noticeType.value) {
+    case 'bungalo':
+      noticePrice.min = 0;
+      break;
+    case 'flat':
+      noticePrice.min = 1000;
+      break;
+    case 'house':
+      noticePrice.min = 5000;
+      break;
+    case 'palace':
+      noticePrice.min = 10000;
+      break;
+  }
+}
+
+function setNoticeCapacity() {
+  switch (noticeRoomNumber.value) {
+    case '1':
+      noticeCapacity.value = '1';
+      break;
+    case '2':
+      noticeCapacity.value = '2';
+      break;
+    case '3':
+      noticeCapacity.value = '3';
+      break;
+    case '100':
+      noticeCapacity.value = '0';
+      break;
+  }
+}
+
 init();
+initForm();
