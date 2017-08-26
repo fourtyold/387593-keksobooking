@@ -128,9 +128,10 @@ function getPins() {
 function setPinsHandler() {
   for (var i = 1; i < pins.length; i++) {
     pins[i].tabIndex = 1;
-    pins[i].addEventListener('click', function () {
+    pins[i].addEventListener('click', function (evt) {
+      var thisPin = evt.target.classList.contains('pin') ? evt.target : evt.target.parentNode;
       for (var j = 0; j < pins.length; j++) {
-        if (pins[j] === this) {
+        if (pins[j] === thisPin) {
           pinIndex = j;
           break;
         }
@@ -138,9 +139,10 @@ function setPinsHandler() {
       openOfferDialog(pinIndex);
     });
     pins[i].addEventListener('keydown', function (evt) {
+      var thisPin = evt.target.classList.contains('pin') ? evt.target : evt.target.parentNode;
       if (evt.keyCode === KEY_CODES.enter) {
         for (var j = 0; j < pins.length; j++) {
-          if (pins[j] === this) {
+          if (pins[j] === thisPin) {
             pinIndex = j;
             break;
           }
