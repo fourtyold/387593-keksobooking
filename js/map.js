@@ -30,7 +30,6 @@ var noticeTimeOut = form.querySelector('#timeout');
 var noticeType = form.querySelector('#type');
 var noticeCapacity = form.querySelector('#capacity');
 var noticeRoomNumber = form.querySelector('#room_number');
-var formSubmit = form.querySelector('.form__submit');
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
