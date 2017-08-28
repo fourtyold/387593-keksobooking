@@ -11,8 +11,7 @@
   var startCoords;
 
   function getPins() {
-    var pinsNL = tokyoPinMap.querySelectorAll('.pin');
-    return pinsNL;
+    return tokyoPinMap.querySelectorAll('.pin');
   }
 
   function closeOfferDialog() {
@@ -29,6 +28,17 @@
     offerDialogClose.addEventListener('keydown', function (evt) {
       window.util.isEnterEvent(evt, closeOfferDialog);
     });
+  }
+
+  function onMouseDown(evt) {
+    startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+    evt.preventDefault();
+    noticeAddress.value = 'x: ' + (pins[0].offsetLeft + 37) + ' y: ' + (pins[0].offsetTop + 94);
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   }
 
   function onMouseMove(moveEvt) {
@@ -58,26 +68,16 @@
     }
   }
 
-  var onMouseUp = function (upEvt) {
+  function onMouseUp(upEvt) {
     upEvt.preventDefault();
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
-  };
+  }
 
   function setDragHandler() {
     noticeAddress.disabled = true;
     noticeAddress.value = 'x: y:';
-    pins[0].addEventListener('mousedown', function (evt) {
-      startCoords = {
-        x: evt.clientX,
-        y: evt.clientY
-      };
-      evt.preventDefault();
-      noticeAddress.value = 'x: ' + (pins[0].offsetLeft + 37) + ' y: ' + (pins[0].offsetTop + 94);
-
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
-    });
+    pins[0].addEventListener('mousedown', onMouseDown);
   }
 
   function init() {
