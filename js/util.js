@@ -21,12 +21,12 @@
     },
     isEscEvent: function (evt, action) {
       if (evt.keyCode === KEY_CODES.esc) {
-        action();
+        action(evt);
       }
     },
     isEnterEvent: function (evt, action) {
       if (evt.keyCode === KEY_CODES.enter) {
-        action();
+        action(evt);
       }
     }
   };
