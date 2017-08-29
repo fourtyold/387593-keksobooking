@@ -29,7 +29,7 @@
               break;
             }
           }
-          window.openOfferDialog(pins, index);
+          window.showCard(pins, index);
         });
         pins[i].addEventListener('keydown', function (evt) {
           var thisPin = evt.target.classList.contains('pin') ? evt.target : evt.target.parentNode;
@@ -40,7 +40,7 @@
                 break;
               }
             }
-            window.openOfferDialog(pins, index);
+            window.showCard(pins, index);
           });
         });
       }
