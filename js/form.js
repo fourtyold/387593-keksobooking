@@ -31,7 +31,7 @@
   }
 
   function setNoticeCapacity(roomNumbers, capacity) {
-    capacity.value = ROOMS_CAPACITY[roomNumbers];
+    window.util.setThisValue(ROOMS_CAPACITY[roomNumbers], capacity);
     setMaxCapacity();
   }
 
