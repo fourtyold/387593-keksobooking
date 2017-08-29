@@ -2,6 +2,8 @@
 
 (function () {
   window.synchronizeFields = function (initElement, toSyncElement, callback) {
-    callback(initElement, toSyncElement);
+    initElement.onchange = function () {
+      callback(initElement.value, toSyncElement);
+    };
   };
 })();

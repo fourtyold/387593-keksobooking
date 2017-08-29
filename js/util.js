@@ -28,6 +28,22 @@
       if (evt.keyCode === KEY_CODES.enter) {
         action(evt);
       }
+    },
+    removeClassIfExist: function (element, className) {
+      if (element.classList.contains(className)) {
+        element.classList.remove(className);
+      }
+    },
+    addClassIfNotExist: function (element, className) {
+      if (!element.classList.contains(className)) {
+        element.classList.add(className);
+      }
+    },
+    setThisValue: function (value, element) {
+      element.value = value;
+    },
+    setThisValueMin: function (value, element) {
+      element.min = value;
     }
   };
 })();

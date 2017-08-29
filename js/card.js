@@ -23,6 +23,5 @@
     dialogTitleImg.src = object.author.avatar;
     return offerElement;
   };
-
 })();
 

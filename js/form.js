@@ -2,6 +2,19 @@
 
 (function () {
 
+  var ROOMS_CAPACITY = {
+    '1': '1',
+    '2': '2',
+    '3': '2',
+    '100': '0'
+  };
+  var APPARTEMENT_PRICES = {
+    'bungalo': 0,
+    'flat': 1000,
+    'house': 5000,
+    'palace': 10000
+  };
+
   var form = document.querySelector('.notice__form');
   var noticeTitle = form.querySelector('#title');
   var noticeAddress = form.querySelector('#address');
@@ -12,50 +25,14 @@
   var noticeCapacity = form.querySelector('#capacity');
   var noticeRoomNumber = form.querySelector('#room_number');
 
-  function setThisValue(value, element) {
-    element.value = value;
+  function setNoticePrice(type, price) {
+    window.util.setThisValue(APPARTEMENT_PRICES[type], price);
+    window.util.setThisValueMin(APPARTEMENT_PRICES[type], price);
   }
 
-  function setThisValueMin(value, element) {
-    element.min = value;
-  }
-
-  function getNoticePrice() {
-    var price;
-    switch (noticeType.value) {
-      case 'bungalo':
-        price = 0;
-        break;
-      case 'flat':
-        price = 1000;
-        break;
-      case 'house':
-        price = 5000;
-        break;
-      case 'palace':
-        price = 10000;
-        break;
-    }
-    return price;
-  }
-
-  function getNoticeCapacity() {
-    var capacity;
-    switch (noticeRoomNumber.value) {
-      case '1':
-        capacity = '1';
-        break;
-      case '2':
-        capacity = '2';
-        break;
-      case '3':
-        capacity = '2';
-        break;
-      case '100':
-        capacity = '0';
-        break;
-    }
-    return capacity;
+  function setNoticeCapacity(roomNumbers, capacity) {
+    capacity.value = ROOMS_CAPACITY[roomNumbers];
+    setMaxCapacity();
   }
 
   function setMaxCapacity() {
@@ -100,30 +77,16 @@
     noticeTitle.maxLength = 100;
 
     noticePrice.required = true;
-    window.synchronizeFields(getNoticePrice(), noticePrice, setThisValue);
 
-    window.synchronizeFields(getNoticeCapacity(), noticeCapacity, setThisValue);
-    setMaxCapacity();
+    setNoticePrice(noticeType.value, noticePrice);
+    setNoticeCapacity(noticeRoomNumber.value, noticeCapacity);
 
     form.action = 'https://1510.dump.academy/keksobooking';
 
-    noticeTimeIn.onchange = function () {
-      window.synchronizeFields(noticeTimeIn.value, noticeTimeOut, setThisValue);
-    };
-
-    noticeTimeOut.onchange = function () {
-      window.synchronizeFields(noticeTimeOut.value, noticeTimeIn, setThisValue);
-    };
-
-    noticeType.onchange = function () {
-      window.synchronizeFields(getNoticePrice(), noticePrice, setThisValue);
-      window.synchronizeFields(getNoticePrice(), noticePrice, setThisValueMin);
-    };
-
-    noticeRoomNumber.onchange = function () {
-      window.synchronizeFields(getNoticeCapacity(), noticeCapacity, setThisValue);
-      setMaxCapacity();
-    };
+    window.synchronizeFields(noticeTimeIn, noticeTimeOut, window.util.setThisValue);
+    window.synchronizeFields(noticeTimeOut, noticeTimeIn, window.util.setThisValue);
+    window.synchronizeFields(noticeType, noticePrice, setNoticePrice);
+    window.synchronizeFields(noticeRoomNumber, noticeCapacity, setNoticeCapacity);
 
     checkFieldValidity(noticeAddress);
     checkFieldValidity(noticePrice);
