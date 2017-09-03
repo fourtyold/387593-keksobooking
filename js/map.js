@@ -86,18 +86,21 @@
   }
 
   function setDragHandler() {
-    noticeAddress.disabled = true;
-    noticeAddress.value = 'x: y:';
     pins[0].addEventListener('mousedown', onMouseDown);
   }
 
-  function init() {
-    window.pin.initPins(window.offerObjects);
+  function getData(data) {
+    window.offerObjects = data;
+    window.pin.initPins(data);
     pins = getPins();
-    window.util.addClassIfNotExist(offerDialog, 'hidden');
     window.pin.setPinsHandler(pins, pinIndex);
-    setOfferDialogHandler();
     setDragHandler();
+  }
+
+  function init() {
+    window.backend.load(getData, window.backend.errorHandler);
+    window.util.addClassIfNotExist(offerDialog, 'hidden');
+    setOfferDialogHandler();
   }
 
   init();

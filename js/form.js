@@ -69,8 +69,19 @@
     };
   }
 
+  function resetForm() {
+    form.reset();
+    initForm();
+  }
+
+  function submitForm(evt) {
+    evt.preventDefault();
+    window.backend.save(new FormData(form), resetForm, window.backend.errorHandler);
+  }
+
   function initForm() {
-    noticeAddress.required = true;
+    noticeAddress.readOnly = true;
+    noticeAddress.value = 'x: y:';
 
     noticeTitle.required = true;
     noticeTitle.minLength = 30;
@@ -91,6 +102,8 @@
     checkFieldValidity(noticeAddress);
     checkFieldValidity(noticePrice);
     checkFieldValidity(noticeTitle);
+
+    form.addEventListener('submit', submitForm);
   }
 
   initForm();
