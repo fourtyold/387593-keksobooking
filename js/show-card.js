@@ -11,7 +11,7 @@
       window.util.removeClassIfExist(pins[i], 'pin--active');
     }
     window.util.addClassIfNotExist(pins[index], 'pin--active');
-    offerDialog.replaceChild(window.getOffer(window.offerObjects[index - 1]), dialogPanel);
+    offerDialog.replaceChild(window.map.getOfferObject(index - 1), dialogPanel);
     dialogPanel = offerDialog.querySelector('.dialog__panel');
     document.addEventListener('keydown', window.map.onOfferDialogEscPress);
   };
