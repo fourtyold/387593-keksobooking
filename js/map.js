@@ -13,13 +13,25 @@
     right: 1164
   };
 
+  var DEBOUNCE_DELAY = 500;
+
   var offerDialog = document.querySelector('.dialog');
   var tokyoPinMap = document.querySelector('.tokyo__pin-map');
   var pins = [];
+  var offersList = [];
   var offerDialogClose = offerDialog.querySelector('.dialog__close');
   var pinIndex;
   var noticeAddress = document.querySelector('#address');
   var startCoords;
+
+  var tokyoFilters = document.querySelector('.tokyo__filters');
+  var housingType = tokyoFilters.querySelector('#housing_type');
+  var housingPrice = tokyoFilters.querySelector('#housing_price');
+  var housingRoomNumber = tokyoFilters.querySelector('#housing_room-number');
+  var housingGuestsNumber = tokyoFilters.querySelector('#housing_guests-number');
+  var housingFeatures = tokyoFilters.querySelector('#housing_features');
+
+  var bounce = window.debounce(window.pin.filterPins, DEBOUNCE_DELAY);
 
   function getPins() {
     return tokyoPinMap.querySelectorAll('.pin');
@@ -90,17 +102,44 @@
   }
 
   function getData(data) {
-    window.offerObjects = data;
+    offersList = data;
     window.pin.initPins(data);
     pins = getPins();
     window.pin.setPinsHandler(pins, pinIndex);
     setDragHandler();
+    window.pin.filterPins(offersList, pins);
+  }
+
+  function setFilters() {
+    housingType.addEventListener('change', function () {
+      window.util.addClassIfNotExist(offerDialog, 'hidden');
+      bounce(offersList, pins);
+    });
+    housingPrice.addEventListener('change', function () {
+      window.util.addClassIfNotExist(offerDialog, 'hidden');
+      bounce(offersList, pins);
+    });
+    housingRoomNumber.addEventListener('change', function () {
+      window.util.addClassIfNotExist(offerDialog, 'hidden');
+      bounce(offersList, pins);
+    });
+    housingGuestsNumber.addEventListener('change', function () {
+      window.util.addClassIfNotExist(offerDialog, 'hidden');
+      bounce(offersList, pins);
+    });
+    housingFeatures.addEventListener('click', function (evt) {
+      if (evt.target.parentNode.classList.contains('feature') && !evt.target.classList.contains('feature__image')) {
+        window.util.addClassIfNotExist(offerDialog, 'hidden');
+        bounce(offersList, pins);
+      }
+    });
   }
 
   function init() {
     window.backend.load(getData, window.backend.errorHandler);
     window.util.addClassIfNotExist(offerDialog, 'hidden');
     setOfferDialogHandler();
+    setFilters();
   }
 
   init();
@@ -108,7 +147,9 @@
   window.map = {
     onOfferDialogEscPress: function (evt) {
       window.util.isEscEvent(evt, closeOfferDialog);
+    },
+    getOfferObject: function (i) {
+      return window.getOffer(offersList[i]);
     }
   };
-
 })();

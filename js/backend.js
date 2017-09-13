@@ -7,44 +7,34 @@
     upload: 'https://1510.dump.academy/keksobooking'
   };
 
+  function requestHandler(request, onLoad, onError) {
+    request.responseType = 'json';
+    request.addEventListener('load', function () {
+      if (request.status === 200) {
+        onLoad(request.response);
+      } else {
+        onError('Неизвестный статус: ' + request.status + ' ' + request.statusText);
+      }
+    });
+    request.addEventListener('error', function () {
+      onError('Произошла ошибка соединения');
+    });
+    request.addEventListener('timeout', function () {
+      onError('Запрос не успел выполниться за ' + request.timeout + 'мс');
+    });
+    request.timeout = 10000;
+  }
+
   window.backend = {
     load: function (onLoad, onError) {
       var xhr = new XMLHttpRequest();
-      xhr.responseType = 'json';
-      xhr.addEventListener('load', function () {
-        if (xhr.status === 200) {
-          onLoad(xhr.response);
-        } else {
-          onError('Неизвестный статус: ' + xhr.status + ' ' + xhr.statusText);
-        }
-      });
-      xhr.addEventListener('error', function () {
-        onError('Произошла ошибка соединения');
-      });
-      xhr.addEventListener('timeout', function () {
-        onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
-      });
-      xhr.timeout = 10000;
+      requestHandler(xhr, onLoad, onError);
       xhr.open('GET', URL.download);
       xhr.send();
     },
     save: function (data, onLoad, onError) {
       var xhr = new XMLHttpRequest();
-      xhr.responseType = 'json';
-      xhr.addEventListener('load', function () {
-        if (xhr.status === 200) {
-          onLoad();
-        } else {
-          onError('Неизвестный статус: ' + xhr.status + ' ' + xhr.statusText);
-        }
-      });
-      xhr.addEventListener('error', function () {
-        onError('Произошла ошибка соединения');
-      });
-      xhr.addEventListener('timeout', function () {
-        onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
-      });
-      xhr.timeout = 10000;
+      requestHandler(xhr, onLoad, onError);
       xhr.open('POST', URL.upload);
       xhr.send(data);
     },
