@@ -114,10 +114,12 @@
 
   function setFilters() {
     for (var key in filters) {
-      filters[key].addEventListener('change', function () {
-        window.util.addClassIfNotExist(offerDialog, 'hidden');
-        bounce(offersList, pins);
-      });
+      if (filters.hasOwnProperty(key)) {
+        filters[key].addEventListener('change', function () {
+          window.util.addClassIfNotExist(offerDialog, 'hidden');
+          bounce(offersList, pins);
+        });
+      }
     }
     housingFeatures.addEventListener('click', function (evt) {
       if (evt.target.parentNode.classList.contains('feature') && !evt.target.classList.contains('feature__image')) {
