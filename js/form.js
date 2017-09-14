@@ -14,6 +14,12 @@
     'house': 5000,
     'palace': 10000
   };
+  var CAPACITY_OPTIONS = [
+    [0, 1, 3],
+    [0, 3],
+    [3],
+    [0, 1, 2]
+  ];
 
   var form = document.querySelector('.notice__form');
   var noticeTitle = form.querySelector('#title');
@@ -36,27 +42,11 @@
   }
 
   function setMaxCapacity() {
-    for (var i = 0; i < noticeCapacity.options.length; i++) {
-      noticeCapacity.options[i].disabled = false;
-    }
-    switch (noticeRoomNumber.value) {
-      case '1':
-        noticeCapacity.options[0].disabled = true;
-        noticeCapacity.options[1].disabled = true;
-        noticeCapacity.options[3].disabled = true;
-        break;
-      case '2':
-        noticeCapacity.options[0].disabled = true;
-        noticeCapacity.options[3].disabled = true;
-        break;
-      case '3':
-        noticeCapacity.options[3].disabled = true;
-        break;
-      case '100':
-        noticeCapacity.options[0].disabled = true;
-        noticeCapacity.options[1].disabled = true;
-        noticeCapacity.options[2].disabled = true;
-        break;
+    Array.prototype.forEach.call(noticeCapacity.options, function (it) {
+      it.disabled = false;
+    });
+    for (var i = 0; i < CAPACITY_OPTIONS[noticeRoomNumber.selectedIndex].length; i++) {
+      noticeCapacity.options[CAPACITY_OPTIONS[noticeRoomNumber.selectedIndex][i]].disabled = true;
     }
   }
 

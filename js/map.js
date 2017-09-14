@@ -25,10 +25,12 @@
   var startCoords;
 
   var tokyoFilters = document.querySelector('.tokyo__filters');
-  var housingType = tokyoFilters.querySelector('#housing_type');
-  var housingPrice = tokyoFilters.querySelector('#housing_price');
-  var housingRoomNumber = tokyoFilters.querySelector('#housing_room-number');
-  var housingGuestsNumber = tokyoFilters.querySelector('#housing_guests-number');
+  var filters = {
+    housingType: tokyoFilters.querySelector('#housing_type'),
+    housingPrice: tokyoFilters.querySelector('#housing_price'),
+    housingRoomNumber: tokyoFilters.querySelector('#housing_room-number'),
+    housingGuestsNumber: tokyoFilters.querySelector('#housing_guests-number')
+  };
   var housingFeatures = tokyoFilters.querySelector('#housing_features');
 
   var bounce = window.debounce(window.pin.filterPins, DEBOUNCE_DELAY);
@@ -111,22 +113,12 @@
   }
 
   function setFilters() {
-    housingType.addEventListener('change', function () {
-      window.util.addClassIfNotExist(offerDialog, 'hidden');
-      bounce(offersList, pins);
-    });
-    housingPrice.addEventListener('change', function () {
-      window.util.addClassIfNotExist(offerDialog, 'hidden');
-      bounce(offersList, pins);
-    });
-    housingRoomNumber.addEventListener('change', function () {
-      window.util.addClassIfNotExist(offerDialog, 'hidden');
-      bounce(offersList, pins);
-    });
-    housingGuestsNumber.addEventListener('change', function () {
-      window.util.addClassIfNotExist(offerDialog, 'hidden');
-      bounce(offersList, pins);
-    });
+    for (var key in filters) {
+      filters[key].addEventListener('change', function () {
+        window.util.addClassIfNotExist(offerDialog, 'hidden');
+        bounce(offersList, pins);
+      });
+    }
     housingFeatures.addEventListener('click', function (evt) {
       if (evt.target.parentNode.classList.contains('feature') && !evt.target.classList.contains('feature__image')) {
         window.util.addClassIfNotExist(offerDialog, 'hidden');

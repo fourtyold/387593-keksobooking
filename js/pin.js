@@ -27,25 +27,11 @@
   function typeHandler(offersList, pinsList) {
     switch (housingType.value) {
       case 'flat':
-        offersList.forEach(function (it, i) {
-          window.util.removeClassIfExist(pinsList[i + 1], 'pin--active');
-          if (it.offer.type !== 'flat') {
-            window.util.addClassIfNotExist(pinsList[i + 1], 'hidden');
-          }
-        });
-        break;
       case 'house':
-        offersList.forEach(function (it, i) {
-          window.util.removeClassIfExist(pinsList[i + 1], 'pin--active');
-          if (it.offer.type !== 'house') {
-            window.util.addClassIfNotExist(pinsList[i + 1], 'hidden');
-          }
-        });
-        break;
       case 'bungalo':
         offersList.forEach(function (it, i) {
           window.util.removeClassIfExist(pinsList[i + 1], 'pin--active');
-          if (it.offer.type !== 'bungalo') {
+          if (it.offer.type !== housingType.value) {
             window.util.addClassIfNotExist(pinsList[i + 1], 'hidden');
           }
         });
@@ -95,25 +81,11 @@
   function roomNumberHandler(offersList, pinsList) {
     switch (housingRoomNumber.value) {
       case '1':
-        offersList.forEach(function (it, i) {
-          window.util.removeClassIfExist(pinsList[i + 1], 'pin--active');
-          if (it.offer.rooms !== 1) {
-            window.util.addClassIfNotExist(pinsList[i + 1], 'hidden');
-          }
-        });
-        break;
       case '2':
-        offersList.forEach(function (it, i) {
-          window.util.removeClassIfExist(pinsList[i + 1], 'pin--active');
-          if (it.offer.rooms !== 2) {
-            window.util.addClassIfNotExist(pinsList[i + 1], 'hidden');
-          }
-        });
-        break;
       case '3':
         offersList.forEach(function (it, i) {
           window.util.removeClassIfExist(pinsList[i + 1], 'pin--active');
-          if (it.offer.rooms !== 3) {
+          if (it.offer.rooms !== +housingRoomNumber.value) {
             window.util.addClassIfNotExist(pinsList[i + 1], 'hidden');
           }
         });
@@ -129,17 +101,10 @@
   function guestsNumberHandler(offersList, pinsList) {
     switch (housingGuestsNumber.value) {
       case '1':
-        offersList.forEach(function (it, i) {
-          window.util.removeClassIfExist(pinsList[i + 1], 'pin--active');
-          if (it.offer.guests !== 1) {
-            window.util.addClassIfNotExist(pinsList[i + 1], 'hidden');
-          }
-        });
-        break;
       case '2':
         offersList.forEach(function (it, i) {
           window.util.removeClassIfExist(pinsList[i + 1], 'pin--active');
-          if (it.offer.guests !== 2) {
+          if (it.offer.guests !== +housingGuestsNumber.value) {
             window.util.addClassIfNotExist(pinsList[i + 1], 'hidden');
           }
         });
