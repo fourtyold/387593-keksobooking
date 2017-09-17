@@ -54,9 +54,9 @@
     field.addEventListener('invalid', function () {
       field.style.boxShadow = '0 0 0 2px red';
     });
-    field.oninput = function () {
+    field.addEventListener('input', function () {
       field.style.boxShadow = '';
-    };
+    });
   }
 
   function resetForm() {

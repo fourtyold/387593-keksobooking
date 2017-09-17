@@ -33,12 +33,15 @@
           window.util.removeClassIfExist(pinsList[i + 1], 'pin--active');
           if (it.offer.type !== housingType.value) {
             window.util.addClassIfNotExist(pinsList[i + 1], 'hidden');
+            removePinHandler(pinsList, i + 1);
           }
         });
         break;
       case 'any':
         for (var i = 1; i < pinsList.length; i++) {
-          window.util.removeClassIfExist(pinsList[i], 'pin--active');
+          if (window.util.removeClassIfExist(pinsList[i], 'pin--active')) {
+            break;
+          }
         }
         break;
     }
@@ -51,6 +54,7 @@
           window.util.removeClassIfExist(pinsList[i + 1], 'pin--active');
           if (it.offer.price >= 10000) {
             window.util.addClassIfNotExist(pinsList[i + 1], 'hidden');
+            removePinHandler(pinsList, i + 1);
           }
         });
         break;
@@ -59,6 +63,7 @@
           window.util.removeClassIfExist(pinsList[i + 1], 'pin--active');
           if (it.offer.price < 10000 || it.offer.price > 50000) {
             window.util.addClassIfNotExist(pinsList[i + 1], 'hidden');
+            removePinHandler(pinsList, i + 1);
           }
         });
         break;
@@ -67,12 +72,15 @@
           window.util.removeClassIfExist(pinsList[i + 1], 'pin--active');
           if (it.offer.price <= 50000) {
             window.util.addClassIfNotExist(pinsList[i + 1], 'hidden');
+            removePinHandler(pinsList, i + 1);
           }
         });
         break;
       case 'any':
         for (var i = 1; i < pinsList.length; i++) {
-          window.util.removeClassIfExist(pinsList[i], 'pin--active');
+          if (window.util.removeClassIfExist(pinsList[i], 'pin--active')) {
+            break;
+          }
         }
         break;
     }
@@ -87,12 +95,15 @@
           window.util.removeClassIfExist(pinsList[i + 1], 'pin--active');
           if (it.offer.rooms !== +housingRoomNumber.value) {
             window.util.addClassIfNotExist(pinsList[i + 1], 'hidden');
+            removePinHandler(pinsList, i + 1);
           }
         });
         break;
       case 'any':
         for (var i = 1; i < pinsList.length; i++) {
-          window.util.removeClassIfExist(pinsList[i], 'pin--active');
+          if (window.util.removeClassIfExist(pinsList[i], 'pin--active')) {
+            break;
+          }
         }
         break;
     }
@@ -106,12 +117,15 @@
           window.util.removeClassIfExist(pinsList[i + 1], 'pin--active');
           if (it.offer.guests !== +housingGuestsNumber.value) {
             window.util.addClassIfNotExist(pinsList[i + 1], 'hidden');
+            removePinHandler(pinsList, i + 1);
           }
         });
         break;
       case 'any':
         for (var i = 1; i < pinsList.length; i++) {
-          window.util.removeClassIfExist(pinsList[i], 'pin--active');
+          if (window.util.removeClassIfExist(pinsList[i], 'pin--active')) {
+            break;
+          }
         }
         break;
     }
@@ -128,39 +142,37 @@
       featuresFilters.forEach(function (filter) {
         if (it.offer.features.indexOf(filter) === -1) {
           window.util.addClassIfNotExist(pinsList[i + 1], 'hidden');
+          removePinHandler(pinsList, i + 1);
         }
       });
     });
   }
 
+  function setPinHandler(pins, index) {
+    pins[index].tabIndex = 1;
+    pins[index].addEventListener('click', function () {
+      window.showCard(pins, index);
+    });
+    pins[index].addEventListener('keydown', function (evt) {
+      window.util.isEnterEvent(evt, function () {
+        window.showCard(pins, index);
+      });
+    });
+  }
+
+  function removePinHandler(pins, index) {
+    pins[index].tabIndex = 0;
+    pins[index].removeEventListener('click', function () {
+      window.showCard(pins, index);
+    });
+    pins[index].removeEventListener('keydown', function (evt) {
+      window.util.isEnterEvent(evt, function () {
+        window.showCard(pins, index);
+      });
+    });
+  }
+
   window.pin = {
-    setPinsHandler: function (pins, index) {
-      for (var i = 1; i < pins.length; i++) {
-        pins[i].tabIndex = 1;
-        pins[i].addEventListener('click', function (evt) {
-          var thisPin = evt.target.classList.contains('pin') ? evt.target : evt.target.parentNode;
-          for (var j = 0; j < pins.length; j++) {
-            if (pins[j] === thisPin) {
-              index = j;
-              break;
-            }
-          }
-          window.showCard(pins, index);
-        });
-        pins[i].addEventListener('keydown', function (evt) {
-          var thisPin = evt.target.classList.contains('pin') ? evt.target : evt.target.parentNode;
-          window.util.isEnterEvent(evt, function () {
-            for (var j = 0; j < pins.length; j++) {
-              if (pins[j] === thisPin) {
-                index = j;
-                break;
-              }
-            }
-            window.showCard(pins, index);
-          });
-        });
-      }
-    },
     initPins: function (offerList) {
       var fragment = document.createDocumentFragment();
       for (var i = 0; i < offerList.length; i++) {
@@ -171,12 +183,31 @@
     filterPins: function (offersList, pinsList) {
       for (var i = 1; i < pinsList.length; i++) {
         window.util.removeClassIfExist(pinsList[i], 'hidden');
+        setPinHandler(pinsList, i);
       }
       typeHandler(offersList, pinsList);
       priceHandler(offersList, pinsList);
       roomNumberHandler(offersList, pinsList);
       guestsNumberHandler(offersList, pinsList);
       featuresHandler(offersList, pinsList);
+    },
+    hidePins: function (offersList, pinsList) {
+      var pinNumbers = [];
+      var randomIndex;
+      while (pinNumbers.length < 3) {
+        randomIndex = window.util.getRandomInt(1, offersList.length);
+        if (pinNumbers.indexOf(randomIndex) === -1) {
+          pinNumbers.push(randomIndex);
+        }
+      }
+      pinNumbers.forEach(function (it) {
+        setPinHandler(pinsList, it);
+      });
+      for (var i = 1; i < pinsList.length; i++) {
+        if (pinNumbers.indexOf(i) === -1) {
+          pinsList[i].classList.add('hidden');
+        }
+      }
     }
   };
 })();

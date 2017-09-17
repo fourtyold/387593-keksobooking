@@ -11,14 +11,6 @@
     getRandomInt: function (min, max) {
       return Math.floor(Math.random() * (max - min + 1) + min);
     },
-    shuffleArr: function (arr) {
-      for (var i = 0; i < arr.length; i++) {
-        var arrItem = arr[i];
-        var j = window.util.getRandomInt(0, arr.length - 1);
-        arr[i] = arr[j];
-        arr[j] = arrItem;
-      }
-    },
     isEscEvent: function (evt, action) {
       if (evt.keyCode === KEY_CODES.esc) {
         action(evt);
@@ -30,9 +22,12 @@
       }
     },
     removeClassIfExist: function (element, className) {
+      var ind = false;
       if (element.classList.contains(className)) {
         element.classList.remove(className);
+        ind = true;
       }
+      return ind;
     },
     addClassIfNotExist: function (element, className) {
       if (!element.classList.contains(className)) {

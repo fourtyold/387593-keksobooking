@@ -20,7 +20,6 @@
   var pins = [];
   var offersList = [];
   var offerDialogClose = offerDialog.querySelector('.dialog__close');
-  var pinIndex;
   var noticeAddress = document.querySelector('#address');
   var startCoords;
 
@@ -37,22 +36,6 @@
 
   function getPins() {
     return tokyoPinMap.querySelectorAll('.pin');
-  }
-
-  function closeOfferDialog() {
-    offerDialog.classList.add('hidden');
-    for (var i = 1; i < pins.length; i++) {
-      window.util.removeClassIfExist(pins[i], 'pin--active');
-    }
-    document.removeEventListener('keydown', window.map.onOfferDialogEscPress);
-  }
-
-  function setOfferDialogHandler() {
-    offerDialogClose.tabIndex = 1;
-    offerDialogClose.addEventListener('click', closeOfferDialog);
-    offerDialogClose.addEventListener('keydown', function (evt) {
-      window.util.isEnterEvent(evt, closeOfferDialog);
-    });
   }
 
   function onMouseDown(evt) {
@@ -107,9 +90,8 @@
     offersList = data;
     window.pin.initPins(data);
     pins = getPins();
-    window.pin.setPinsHandler(pins, pinIndex);
     setDragHandler();
-    window.pin.filterPins(offersList, pins);
+    window.pin.hidePins(offersList, pins);
   }
 
   function setFilters() {
@@ -132,7 +114,6 @@
   function init() {
     window.backend.load(getData, window.backend.errorHandler);
     window.util.addClassIfNotExist(offerDialog, 'hidden');
-    setOfferDialogHandler();
     setFilters();
   }
 
@@ -140,10 +121,24 @@
 
   window.map = {
     onOfferDialogEscPress: function (evt) {
-      window.util.isEscEvent(evt, closeOfferDialog);
+      window.util.isEscEvent(evt, window.map.closeOfferDialog);
     },
     getOfferObject: function (i) {
       return window.getOffer(offersList[i]);
+    },
+    closeOfferDialog: function () {
+      offerDialog.classList.add('hidden');
+      for (var i = 1; i < pins.length; i++) {
+        if (window.util.removeClassIfExist(pins[i], 'pin--active')) {
+          break;
+        }
+      }
+      document.removeEventListener('keydown', window.map.onOfferDialogEscPress);
+      offerDialogClose.removeEventListener('click', window.map.closeOfferDialog);
+      offerDialogClose.removeEventListener('keydown', function (evt) {
+        window.util.isEnterEvent(evt, window.map.closeOfferDialog);
+      });
+      offerDialogClose.tabIndex = 0;
     }
   };
 })();
