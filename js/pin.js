@@ -172,42 +172,48 @@
     });
   }
 
-  window.pin = {
-    initPins: function (offerList) {
-      var fragment = document.createDocumentFragment();
-      for (var i = 0; i < offerList.length; i++) {
-        fragment.appendChild(renderPins(offerList[i]));
-      }
-      tokyoPinMap.appendChild(fragment);
-    },
-    filterPins: function (offersList, pinsList) {
-      for (var i = 1; i < pinsList.length; i++) {
-        window.util.removeClassIfExist(pinsList[i], 'hidden');
-        setPinHandler(pinsList, i);
-      }
-      typeHandler(offersList, pinsList);
-      priceHandler(offersList, pinsList);
-      roomNumberHandler(offersList, pinsList);
-      guestsNumberHandler(offersList, pinsList);
-      featuresHandler(offersList, pinsList);
-    },
-    hidePins: function (offersList, pinsList) {
-      var pinNumbers = [];
-      var randomIndex;
-      while (pinNumbers.length < 3) {
-        randomIndex = window.util.getRandomInt(1, offersList.length);
-        if (pinNumbers.indexOf(randomIndex) === -1) {
-          pinNumbers.push(randomIndex);
-        }
-      }
-      pinNumbers.forEach(function (it) {
-        setPinHandler(pinsList, it);
-      });
-      for (var i = 1; i < pinsList.length; i++) {
-        if (pinNumbers.indexOf(i) === -1) {
-          pinsList[i].classList.add('hidden');
-        }
+  function initPins(offerList) {
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < offerList.length; i++) {
+      fragment.appendChild(renderPins(offerList[i]));
+    }
+    tokyoPinMap.appendChild(fragment);
+  }
+
+  function filterPins(offersList, pinsList) {
+    for (var i = 1; i < pinsList.length; i++) {
+      window.util.removeClassIfExist(pinsList[i], 'hidden');
+      setPinHandler(pinsList, i);
+    }
+    typeHandler(offersList, pinsList);
+    priceHandler(offersList, pinsList);
+    roomNumberHandler(offersList, pinsList);
+    guestsNumberHandler(offersList, pinsList);
+    featuresHandler(offersList, pinsList);
+  }
+
+  function hidePins(offersList, pinsList) {
+    var pinNumbers = [];
+    var randomIndex;
+    while (pinNumbers.length < 3) {
+      randomIndex = window.util.getRandomInt(1, offersList.length);
+      if (pinNumbers.indexOf(randomIndex) === -1) {
+        pinNumbers.push(randomIndex);
       }
     }
+    pinNumbers.forEach(function (it) {
+      setPinHandler(pinsList, it);
+    });
+    for (var i = 1; i < pinsList.length; i++) {
+      if (pinNumbers.indexOf(i) === -1) {
+        pinsList[i].classList.add('hidden');
+      }
+    }
+  }
+
+  window.pin = {
+    initPins: initPins,
+    filterPins: filterPins,
+    hidePins: hidePins
   };
 })();

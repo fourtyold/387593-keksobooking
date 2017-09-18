@@ -6,7 +6,7 @@
   var dialogPanel = offerDialog.querySelector('.dialog__panel');
   var offerDialogClose = offerDialog.querySelector('.dialog__close');
 
-  window.showCard = function (pins, index) {
+  function showCard(pins, index) {
     offerDialog.classList.remove('hidden');
     for (var i = 1; i < pins.length; i++) {
       if (window.util.removeClassIfExist(pins[i], 'pin--active')) {
@@ -22,5 +22,7 @@
     offerDialogClose.addEventListener('keydown', function (evt) {
       window.util.isEnterEvent(evt, window.map.closeOfferDialog);
     });
-  };
+  }
+
+  window.showCard = showCard;
 })();

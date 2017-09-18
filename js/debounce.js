@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  window.debounce = function (func, wait) {
+  function debounce(func, wait) {
     var timeout;
     return function (arg1, arg2) {
       function later() {
@@ -11,5 +11,7 @@
       clearTimeout(timeout);
       timeout = setTimeout(later, wait);
     };
-  };
+  }
+
+  window.debounce = debounce;
 })();

@@ -117,28 +117,34 @@
     setFilters();
   }
 
+  function onOfferDialogEscPress(evt) {
+    window.util.isEscEvent(evt, window.map.closeOfferDialog);
+  }
+
+  function getOfferObject(i) {
+    return window.getOffer(offersList[i]);
+  }
+
+  function closeOfferDialog() {
+    offerDialog.classList.add('hidden');
+    for (var i = 1; i < pins.length; i++) {
+      if (window.util.removeClassIfExist(pins[i], 'pin--active')) {
+        break;
+      }
+    }
+    document.removeEventListener('keydown', window.map.onOfferDialogEscPress);
+    offerDialogClose.removeEventListener('click', window.map.closeOfferDialog);
+    offerDialogClose.removeEventListener('keydown', function (evt) {
+      window.util.isEnterEvent(evt, window.map.closeOfferDialog);
+    });
+    offerDialogClose.tabIndex = 0;
+  }
+
   init();
 
   window.map = {
-    onOfferDialogEscPress: function (evt) {
-      window.util.isEscEvent(evt, window.map.closeOfferDialog);
-    },
-    getOfferObject: function (i) {
-      return window.getOffer(offersList[i]);
-    },
-    closeOfferDialog: function () {
-      offerDialog.classList.add('hidden');
-      for (var i = 1; i < pins.length; i++) {
-        if (window.util.removeClassIfExist(pins[i], 'pin--active')) {
-          break;
-        }
-      }
-      document.removeEventListener('keydown', window.map.onOfferDialogEscPress);
-      offerDialogClose.removeEventListener('click', window.map.closeOfferDialog);
-      offerDialogClose.removeEventListener('keydown', function (evt) {
-        window.util.isEnterEvent(evt, window.map.closeOfferDialog);
-      });
-      offerDialogClose.tabIndex = 0;
-    }
+    onOfferDialogEscPress: onOfferDialogEscPress,
+    getOfferObject: getOfferObject,
+    closeOfferDialog: closeOfferDialog
   };
 })();

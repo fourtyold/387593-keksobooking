@@ -5,7 +5,7 @@
   var lodgeTemplate = document.querySelector('#lodge-template').content;
   var dialogTitleImg = document.querySelector('.dialog').querySelector('.dialog__title').querySelector('img');
 
-  window.getOffer = function (object) {
+  function getOffer(object) {
     var offerElement = lodgeTemplate.cloneNode(true);
     offerElement.querySelector('.lodge__title').textContent = object.offer.title;
     offerElement.querySelector('.lodge__address').textContent = object.offer.address;
@@ -22,6 +22,8 @@
     offerElement.querySelector('.lodge__description').textContent = object.offer.description;
     dialogTitleImg.src = object.author.avatar;
     return offerElement;
-  };
+  }
+
+  window.getOffer = getOffer;
 })();
 

@@ -7,38 +7,52 @@
     esc: 27
   };
 
-  window.util = {
-    getRandomInt: function (min, max) {
-      return Math.floor(Math.random() * (max - min + 1) + min);
-    },
-    isEscEvent: function (evt, action) {
-      if (evt.keyCode === KEY_CODES.esc) {
-        action(evt);
-      }
-    },
-    isEnterEvent: function (evt, action) {
-      if (evt.keyCode === KEY_CODES.enter) {
-        action(evt);
-      }
-    },
-    removeClassIfExist: function (element, className) {
-      var ind = false;
-      if (element.classList.contains(className)) {
-        element.classList.remove(className);
-        ind = true;
-      }
-      return ind;
-    },
-    addClassIfNotExist: function (element, className) {
-      if (!element.classList.contains(className)) {
-        element.classList.add(className);
-      }
-    },
-    setThisValue: function (value, element) {
-      element.value = value;
-    },
-    setThisValueMin: function (value, element) {
-      element.min = value;
+  function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
+  function isEscEvent(evt, action) {
+    if (evt.keyCode === KEY_CODES.esc) {
+      action(evt);
     }
+  }
+
+  function isEnterEvent(evt, action) {
+    if (evt.keyCode === KEY_CODES.enter) {
+      action(evt);
+    }
+  }
+
+  function removeClassIfExist(element, className) {
+    var ind = false;
+    if (element.classList.contains(className)) {
+      element.classList.remove(className);
+      ind = true;
+    }
+    return ind;
+  }
+
+  function addClassIfNotExist(element, className) {
+    if (!element.classList.contains(className)) {
+      element.classList.add(className);
+    }
+  }
+
+  function setThisValue(value, element) {
+    element.value = value;
+  }
+
+  function setThisValueMin(value, element) {
+    element.min = value;
+  }
+
+  window.util = {
+    getRandomInt: getRandomInt,
+    isEscEvent: isEscEvent,
+    isEnterEvent: isEnterEvent,
+    removeClassIfExist: removeClassIfExist,
+    addClassIfNotExist: addClassIfNotExist,
+    setThisValue: setThisValue,
+    setThisValueMin: setThisValueMin
   };
 })();
